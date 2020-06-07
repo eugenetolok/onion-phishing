@@ -1,0 +1,37 @@
+version: "3"
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: f-app
+    volumes:
+      - ./target.json:/app/target.json
+  torproxy:
+    image: "dperson/torproxy"
+    container_name: "torproxy"
+
+  tor:
+    image: goldy/tor-hidden-service:0.3.5.8
+    links:
+      - app
+    environment:
+      # Set mapping ports
+      SERVICE1_TOR_SERVICE_HOSTS: 80:app:80
+      # Set private key
+      SERVICE1_TOR_SERVICE_KEY: |
+          -----BEGIN RSA PRIVATE KEY-----
+          MIICXAIBAAKBgQDGeFwzm+hnbvK52PszhdMKdfk+7MWlhLTga24wwuykPUkSC2gz
+          CwRiNJmZ4+g3uoKMjBywsRRyHzOaFEDwceK+q6VbbaDcg4MOXUpLpKyXCtkTNfu/
+          QbOEQDsKGTe/UZc6wdFO6ctiXLjkuRqVCGnj6POCVipH2wy1AeadFMTJXQIEAZO4
+          ewKBgCHDDbrIVvhGAAbZattn3amH88FScnjruW+KJDj9iDo8G96jkooWY2v+exWE
+          NmczYCAMWb/Sdy1iotTtcAbgmrc55Ak2xwbu52jCWUeZjGxegp7eG2USTLFmSfgX
+          BzvzqKrMHEcpAmkBDBN2bd0lkQS8QgHnM09nEuYVAF/dgsfHAkEA8Ji3xXTeF+pN
+          3B+1FS5rIPNrbSHG9vyTW9OACbcXCX+hvqCg4HAJiIxRjbP3/GqqyYUyz5RYMhdP
+          qQFVhoG+iwJBANMtNRU3pghG+IAbRZTzh3rkg9DwztUQbNjpy9OgTKks4wJ8jlJc
+          L43DMY/LM5SZ9R7/fVHiu16fC8yM9vC3PLcCQHH7mNdYLGsi77vO6nZW4IqYOVmx
+          sd43LZcBSBM4q6YUbaVc+54UyHQYk5WmPLYZcfoQTUmlK/Yc1bMNYS7unpECQCF3
+          EodP3xNvhM80MvPSeQw64oa1HVvA136bSwZSwYHQASGh/KLq5GON0uyw8dw5jxGJ
+          3sWWQQq626gTHws7onUCQCL2z2Poz57NoNT5my91/jkKQRAKBQgPyhQypl3xdFEH
+          1CXVUddO+ZBQ9XsgCjeMrjLzlSCJ8ASZiCJsQHDs23s=
+          -----END RSA PRIVATE KEY-----
